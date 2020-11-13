@@ -1,0 +1,34 @@
+version: '3.4'
+
+services:
+  create-queues-audit:
+    image: infrastructureascode/aws-cli:1.16.43
+    command: -c "./go sqs create-standard-queue "audit""
+    entrypoint: sh
+    environment:
+      "SQS_ENDPOINT_URL": "http://localstack:4576"
+    volumes:
+      - ./go:/project/go:ro
+    depends_on:
+      - localstack
+    networks:
+      - private
+
+  localstack:
+    image: localstack/localstack:0.8.7
+    ports:
+      - "4572:4572"
+      - "4576:4576"
+      - "8080:8080"
+    environment:
+      "HOSTNAME_EXTERNAL": "localstack"
+      "SERVICES": "sqs:4576,s3:4572"
+      "DEFAULT_REGION": "ap-southeast-2"
+      "DATA_DIR": "/tmp/localstack/data"
+    networks:
+      - private
+      - public
+
+networks:
+  public:
+  private:
