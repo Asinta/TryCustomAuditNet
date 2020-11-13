@@ -1,13 +1,11 @@
 using System;
+using Newtonsoft.Json;
 
 namespace TryCustomAuditNet
 {
     public class OrderBase
     {
-        [UnAuditable]
         public string Name { get; set; }
-        
-        
     }
     
     public class Order : OrderBase

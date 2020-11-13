@@ -22,28 +22,33 @@ namespace TryCustomAuditNet
             var jo = new JObject();
             var serializer = JsonSerializer.Create(Configuration.JsonSettings);
             
-            foreach (PropertyInfo propInfo in value.GetType().GetProperties())
+            var js = JsonConvert.SerializeObject(value, new JsonSerializerSettings
             {
-                if (propInfo.CanRead)
-                {
-                    object propVal = propInfo.GetValue(value, null);
-                        
-                    var cutomAttribute = propInfo.GetCustomAttribute<UnAuditableAttribute>();
-                    if (cutomAttribute == null)
-                    {
-                        if (propVal == null)
-                        {
-                            jo.Add(propInfo.Name, JValue.CreateNull());
-                        }
-                        else
-                        {
-                            jo.Add(propInfo.Name, JToken.FromObject(propVal, serializer));
-                        }
-                    }
-                }
-            }
+                ContractResolver = new MyContractResolver<UnAuditableAttribute>()
+            });
             
-            return JToken.FromObject(jo, serializer);
+            // foreach (PropertyInfo propInfo in value.GetType().GetProperties())
+            // {
+            //     if (propInfo.CanRead)
+            //     {
+            //         object propVal = propInfo.GetValue(value, null);
+            //             
+            //         var cutomAttribute = propInfo.GetCustomAttribute<UnAuditableAttribute>();
+            //         if (cutomAttribute == null)
+            //         {
+            //             if (propVal == null)
+            //             {
+            //                 jo.Add(propInfo.Name, JValue.CreateNull());
+            //             }
+            //             else
+            //             {
+            //                 jo.Add(propInfo.Name, JToken.FromObject(propVal, serializer));
+            //             }
+            //         }
+            //     }
+            // }
+            
+            return JToken.FromObject(js, serializer);
         }
 
         public JsonSerializerSettings JsonSettings { get; set; } = new JsonSerializerSettings

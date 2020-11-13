@@ -14,9 +14,9 @@ namespace TryCustomAuditNet
         static void Main(string[] args)
         {
             var queueUrl = "http://localhost:4576/queue/audit";
-
+            
             var client = BuildAmazonSqsClient("http://localhost:4576");
-
+            
             ConfigureAudit();
             
             var order = new Order("BASE_name", Guid.NewGuid(), "Jone Doe", 100, DateTime.UtcNow, new Product
