@@ -31,7 +31,14 @@ namespace TryCustomAuditNet
                     var cutomAttribute = propInfo.GetCustomAttribute<UnAuditableAttribute>();
                     if (cutomAttribute == null)
                     {
-                        jo.Add(propInfo.Name, JToken.FromObject(propVal, serializer));
+                        if (propVal == null)
+                        {
+                            jo.Add(propInfo.Name, JValue.CreateNull());
+                        }
+                        else
+                        {
+                            jo.Add(propInfo.Name, JToken.FromObject(propVal, serializer));
+                        }
                     }
                 }
             }

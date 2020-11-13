@@ -40,7 +40,14 @@ namespace TryCustomAuditNet
                     var customAttribute = propInfo.GetCustomAttribute<UnAuditableAttribute>();
                     if (customAttribute == null)
                     {
-                        jo.Add(propInfo.Name, JToken.FromObject(propVal, serializer));
+                        if (propVal == null)
+                        {
+                            jo.Add(propInfo.Name, JValue.CreateNull());
+                        }
+                        else
+                        {
+                            jo.Add(propInfo.Name, JToken.FromObject(propVal, serializer));
+                        }
                     }
                 }
             }
@@ -59,7 +66,7 @@ namespace TryCustomAuditNet
             if(string.IsNullOrWhiteSpace(queueUrl)) return;
             
             var message = JsonConvert.SerializeObject(auditEvent, Formatting.None);
-            Console.WriteLine($"send message is {message}");
+            Console.WriteLine($"send message is {message} to {queueUrl}");
 
             var request = new SendMessageRequest(queueUrl, message)
             {
