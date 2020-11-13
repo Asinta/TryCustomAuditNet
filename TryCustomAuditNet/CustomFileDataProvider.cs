@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Audit.Core;
@@ -19,36 +18,12 @@ namespace TryCustomAuditNet
                 return null;
             }
             
-            var jo = new JObject();
-            var serializer = JsonSerializer.Create(Configuration.JsonSettings);
-            
             var js = JsonConvert.SerializeObject(value, new JsonSerializerSettings
             {
                 ContractResolver = new MyContractResolver<UnAuditableAttribute>()
             });
-            
-            // foreach (PropertyInfo propInfo in value.GetType().GetProperties())
-            // {
-            //     if (propInfo.CanRead)
-            //     {
-            //         object propVal = propInfo.GetValue(value, null);
-            //             
-            //         var cutomAttribute = propInfo.GetCustomAttribute<UnAuditableAttribute>();
-            //         if (cutomAttribute == null)
-            //         {
-            //             if (propVal == null)
-            //             {
-            //                 jo.Add(propInfo.Name, JValue.CreateNull());
-            //             }
-            //             else
-            //             {
-            //                 jo.Add(propInfo.Name, JToken.FromObject(propVal, serializer));
-            //             }
-            //         }
-            //     }
-            // }
-            
-            return JToken.FromObject(js, serializer);
+
+            return JToken.FromObject(js);
         }
 
         public JsonSerializerSettings JsonSettings { get; set; } = new JsonSerializerSettings
